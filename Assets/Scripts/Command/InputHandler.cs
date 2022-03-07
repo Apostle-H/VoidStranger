@@ -45,43 +45,48 @@ public class InputHandler : MonoBehaviour
     private CarryThrow carryThrow;
 
     private bool _carringObject;
+    private bool _climbing;
+    private bool _throwBlock;
 
     private void Awake()
     {
         movement = new Movement(rb, MoveSpeed, MoveSmoothTime, JumpForce, GroundCheckRadius, GroundLayer, Feet, ClimbMoveSpeed);
         pushPull = new PushPull(rb, PushPullCheckRadius, PushPullLayer, PushPullHands, PushPullJointPrefab);
-        carryThrow = new CarryThrow(CarryCheckRadius, CarryLayer, CarryThrowHands, CarryJointPrefab, ThrowForce);
+        carryThrow = new CarryThrow(CarryCheckRadius, CarryLayer, CarryThrowHands, ThrowForce);
     }
 
     private void Update()
     {
-        movement.inputX = Input.GetAxis("Horizontal");
-        movement.jump = Input.GetButtonDown("Jump") ? true : movement.jump;
+        movement.inputX = !_throwBlock ? Input.GetAxis("Horizontal") : 0;
+        movement.inputY = !_throwBlock ? Input.GetAxis("Vertical") : 0;
 
-        movement.inputY = Input.GetAxis("Vertical");
-        movement.startClimbing = (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) ? true : movement.startClimbing;
+        if (!_throwBlock)
+        {
+            movement.jump = Input.GetButtonDown("Jump") ? true : movement.jump;
+            carryThrow.carry = Input.GetButtonDown("PickUp") ? true : carryThrow.carry;
+            pushPull.pushpull = Input.GetButton("PushPull");
+            movement.startClimbing = (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) ? true : movement.startClimbing;
 
-        pushPull.pushpull = Input.GetButton("PushPull");
+        }
 
-        carryThrow.carry = Input.GetButtonDown("PickUp") ? true : carryThrow.carry;
         carryThrow.throwCarried = Input.GetButtonDown("Throw") ? true : carryThrow.throwCarried;
 
-        if (carryThrow.throwCarried)
-            animatorController.SetThrowObjectTrigger();
+        animatorController.climb = _climbing;
     }
 
     private void FixedUpdate()
     {
-        if ((pushPull.pushpull && movement.MoveSpeed != PushPullMoveSpeed) || (!pushPull.pushpull && movement.MoveSpeed != MoveSpeed))
-            movement.ChangeMoveSpeed(pushPull.pushpull ? PushPullMoveSpeed : MoveSpeed);
+        animatorController.grounded = Physics2D.OverlapCircle(Feet.position, GroundCheckRadius, GroundLayer);
+
+        if ((pushPull.pushpull && (Mathf.Abs(rb.velocity.y) <= .005f) && movement.MoveSpeed != PushPullMoveSpeed) || ((!pushPull.pushpull || (Mathf.Abs(rb.velocity.y) >= .005f)) && movement.MoveSpeed != MoveSpeed))
+            movement.ChangeMoveSpeed((pushPull.pushpull && (Mathf.Abs(rb.velocity.y) <= .005f)) ? PushPullMoveSpeed : MoveSpeed);
 
         movement.Move(pushPull.pushpull || animatorController.climb);
         movement.Jump();
 
-        if (!pushPull.pushpull)
+        if (!pushPull.pushpull && !_climbing)
         {
             _carringObject = carryThrow.PickUp();
-            //_carringObject = carryThrow.Throw(transform.right) ? false : _carringObject;
         }
 
         if (!_carringObject)
@@ -89,32 +94,39 @@ public class InputHandler : MonoBehaviour
             pushPull.Grab();
         }
 
+        if (_carringObject && carryThrow.throwCarried)
+            animatorController.SetThrowObjectTrigger();
+
         movement.jump = false;
         carryThrow.carry = false;
         carryThrow.throwCarried = false;
 
         animatorController.pushPull = pushPull.pushpull;
-        animatorController.carry = _carringObject;
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (ClimbLayer.ContainsLayer(collision.gameObject.layer) && !pushPull.pushpull)
         {
-             animatorController.climb = movement.Climb();
+            _climbing = movement.Climb();
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (ClimbLayer.ContainsLayer(collision.gameObject.layer))
-            animatorController.climb = movement.Climb(true);
+            _climbing = movement.Climb(true);
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(PushPullHands.position, PushPullCheckRadius);
         Gizmos.DrawWireSphere(CarryThrowHands.position, CarryCheckRadius);
+    }
+
+    private void ThrowBlock(int block)
+    {
+        _throwBlock = block == 1;
     }
 
     private void ThrowObject()

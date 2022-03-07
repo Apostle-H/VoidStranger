@@ -172,13 +172,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   PushPullMoveSpeed: 2
-  PushPullCheckRadius: 0.2
+  PushPullCheckRadius: 0.1
   PushPullLayer:
     serializedVersion: 2
     m_Bits: 128
   PushPullHands: {fileID: 1168614058}
   PushPullJointPrefab: {fileID: 5034915742802368703, guid: 177068647f501b643a212ba5246e9e7b, type: 3}
-  CarryCheckRadius: 0.4
+  CarryCheckRadius: 0.7
   CarryLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -199,7 +199,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.033456087}
-  m_Size: {x: 0.76558065, y: 1.6905429}
+  m_Size: {x: 0.62085557, y: 1.6905429}
   m_Direction: 0
 --- !u!50 &129618018
 Rigidbody2D:
@@ -324,8 +324,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 129618021}
   rb: {fileID: 129618018}
+  grounded: 0
   climb: 0
   pushPull: 0
+  carry: 0
 --- !u!1 &140957731
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,7 +382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 256716513}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.638, y: -0.198, z: 0}
+  m_LocalPosition: {x: 0.59, y: -0.046, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 129618020}
@@ -580,7 +582,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.033456087}
-  m_Size: {x: 0.76558065, y: 1.6905429}
+  m_Size: {x: 0.62085557, y: 1.6905429}
   m_Direction: 0
 --- !u!50 &473778859
 Rigidbody2D:
@@ -1059,7 +1061,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1168614057}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.303, y: 0, z: 0}
+  m_LocalPosition: {x: 0.282, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 129618020}

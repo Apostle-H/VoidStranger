@@ -296,6 +296,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 7434259040153320850}
   rb: {fileID: 7434259040153320853}
+  inputX: 0
+  hasInputX: 0
   grounded: 0
   climb: 0
   pushPull: 0

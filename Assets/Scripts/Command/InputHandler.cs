@@ -39,8 +39,6 @@ public class InputHandler : MonoBehaviour
     [SerializeField] private LayerMask CarryLayer;
     [SerializeField] private Transform CarryThrowHands;
 
-    [SerializeField] private GameObject CarryJointPrefab;
-
     [SerializeField] Vector2 ThrowForce;
 
     [Header("Death")]

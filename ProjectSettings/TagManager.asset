@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Death
   - Portal
+  - OpenGate
+  - OpenGate2
+  - OpenGate3
+  - OpenGate4
   layers:
   - Default
   - TransparentFX

@@ -9,7 +9,14 @@ public class Button : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.CompareTag(enableBoxTag));
+        if (collision.gameObject.CompareTag(enableBoxTag))
+        {
+            target.SetTrigger("Activate");
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
         if (collision.gameObject.CompareTag(enableBoxTag))
         {
             target.SetTrigger("Activate");

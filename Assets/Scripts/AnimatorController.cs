@@ -7,6 +7,8 @@ public class AnimatorController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Rigidbody2D rb;
 
+    [HideInInspector] public float inputX;
+    [HideInInspector] public bool hasInputX;
     [HideInInspector] public bool grounded;
     [HideInInspector] public bool climb;
     [HideInInspector] public bool pushPull;
@@ -15,6 +17,8 @@ public class AnimatorController : MonoBehaviour
     private void Update()
     {
         animator.SetFloat("VelocityX", Mathf.Abs(rb.velocity.x));
+        animator.SetFloat("InputX", Mathf.Abs(inputX));
+        animator.SetBool("HasInputX", hasInputX);
         animator.SetFloat("VelocityY", rb.velocity.y);
         animator.SetFloat("AbsVelocityY", Mathf.Abs(rb.velocity.y));
         animator.SetBool("Grounded", grounded);

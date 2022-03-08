@@ -70,6 +70,8 @@ public class InputHandler : MonoBehaviour
     private void Update()
     {
         movement.inputX = !_throwBlock ? Input.GetAxis("Horizontal") : 0;
+        animatorController.hasInputX = (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D));
+        animatorController.inputX = Input.GetAxis("Horizontal");
         movement.inputY = !_throwBlock ? Input.GetAxis("Vertical") : 0;
 
         if (!_throwBlock)

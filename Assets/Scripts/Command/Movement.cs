@@ -31,7 +31,7 @@ public class Movement
     private bool _climb;
     private float _gravityScaleSave;
 
-    private bool _facingRight;
+    public bool facingRight { get; private set; } = true;
 
     public Movement(Rigidbody2D _rb, float _ms, float _mst, float _jf, float _gcr, LayerMask _gl, Transform _f, float _cms)
     {
@@ -47,7 +47,7 @@ public class Movement
 
     public void Move(bool CanFlip)
     {
-        if (((!_facingRight && inputX < -.1f) || (_facingRight && inputX > .1f)) && !CanFlip)
+        if (((facingRight && inputX < -.1f) || (!facingRight && inputX > .1f)) && !CanFlip)
             Flip();
 
         _targetVelocity = new Vector2(inputX * (_climb ? ClimbMoveSpeed : MoveSpeed), _climb ? (inputY * ClimbMoveSpeed) : rb.velocity.y);
@@ -94,8 +94,9 @@ public class Movement
 
     private void Flip()
     {
-        _facingRight = !_facingRight;
-        rb.transform.Rotate(0, 180, 0);
+        facingRight = !facingRight;
+
+        rb.transform.localScale = new Vector3(rb.transform.localScale.x * -1, rb.transform.localScale.y, rb.transform.localScale.z);
     }
 
     public void ChangeMoveSpeed(float newMoveSpeed)

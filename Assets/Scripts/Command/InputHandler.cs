@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InputHandler : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Collider2D playerCollider;
     [SerializeField] private AnimatorController animatorController;
+    [SerializeField] private Image hasBox;
 
     [Header("Move")]
     [SerializeField] private float MoveSpeed;
@@ -40,9 +43,13 @@ public class InputHandler : MonoBehaviour
 
     [SerializeField] Vector2 ThrowForce;
 
+    [Header("Death")]
+    [SerializeField] private string deathTag;
+
     private Movement movement;
     private PushPull pushPull;
     private CarryThrow carryThrow;
+    private Death death;
 
     private bool _carringObject;
     private bool _climbing;
@@ -51,8 +58,9 @@ public class InputHandler : MonoBehaviour
     private void Awake()
     {
         movement = new Movement(rb, MoveSpeed, MoveSmoothTime, JumpForce, GroundCheckRadius, GroundLayer, Feet, ClimbMoveSpeed);
-        pushPull = new PushPull(rb, PushPullCheckRadius, PushPullLayer, PushPullHands, PushPullJointPrefab);
+        pushPull = new PushPull(rb, playerCollider, PushPullCheckRadius, PushPullLayer, PushPullHands, PushPullJointPrefab);
         carryThrow = new CarryThrow(CarryCheckRadius, CarryLayer, CarryThrowHands, ThrowForce);
+        death = new Death(gameObject);
     }
 
     private void Update()
@@ -65,13 +73,19 @@ public class InputHandler : MonoBehaviour
             movement.jump = Input.GetButtonDown("Jump") ? true : movement.jump;
             carryThrow.carry = Input.GetButtonDown("PickUp") ? true : carryThrow.carry;
             pushPull.pushpull = Input.GetButton("PushPull");
+            if (pushPull.pushpull)
+                animatorController.pushPullDirection = movement.facingRight ? (movement.inputX > 0 ? 1 : -1) : (movement.inputX < 0 ? 1 : -1);
             movement.startClimbing = (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) ? true : movement.startClimbing;
-
         }
 
-        carryThrow.throwCarried = Input.GetButtonDown("Throw") ? true : carryThrow.throwCarried;
+        if (Mathf.Abs(rb.velocity.y) < .005f)
+        {
+            carryThrow.throwCarried = Input.GetButtonDown("Throw") ? true : carryThrow.throwCarried;
+        }
 
         animatorController.climb = _climbing;
+
+        hasBox.enabled = _carringObject;
     }
 
     private void FixedUpdate()
@@ -89,11 +103,8 @@ public class InputHandler : MonoBehaviour
             _carringObject = carryThrow.PickUp();
         }
 
-        if (!_carringObject)
-        {
-            pushPull.Grab();
-        }
-
+        pushPull.Grab();
+        
         if (_carringObject && carryThrow.throwCarried)
             animatorController.SetThrowObjectTrigger();
 
@@ -102,6 +113,22 @@ public class InputHandler : MonoBehaviour
         carryThrow.throwCarried = false;
 
         animatorController.pushPull = pushPull.pushpull;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag(deathTag))
+        {
+            animatorController.Die();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Respawn"))
+        {
+            death.NewCheckPoint(collision.transform.position);
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -131,6 +158,11 @@ public class InputHandler : MonoBehaviour
 
     private void ThrowObject()
     {
-        _carringObject = carryThrow.Throw(transform.right) ? false : _carringObject;
+        _carringObject = carryThrow.Throw(transform.right * (movement.facingRight ? 1 : -1)) ? false : _carringObject;
+    }
+
+    private void Respawn()
+    {
+        death.Respawn();
     }
 }

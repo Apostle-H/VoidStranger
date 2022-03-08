@@ -6,6 +6,7 @@ public class PushPull
 {
     //Components
     private Rigidbody2D rb;
+    private Collider2D playerCollider;
 
     //Pushpull
     private float CheckRadius;
@@ -16,10 +17,12 @@ public class PushPull
     public bool pushpull;
 
     private GameObject _jointObjectInstance;
+    private GameObject _pushingPullingObject;
 
-    public PushPull(Rigidbody2D _rb, float _cr, LayerMask _cl, Transform _h, GameObject _jop)
+    public PushPull(Rigidbody2D _rb, Collider2D _pc, float _cr, LayerMask _cl, Transform _h, GameObject _jop)
     {
         rb = _rb;
+        playerCollider = _pc;
         CheckRadius = _cr;
         CheckLayer = _cl;
         Hands = _h;
@@ -28,7 +31,7 @@ public class PushPull
 
     public void Grab()
     {
-        if (!pushpull || Mathf.Abs(rb.velocity.y) > .1f)
+        if ((!pushpull || Mathf.Abs(rb.velocity.y) > .1f) && _pushingPullingObject)
         {
             Release();
             return;
@@ -42,12 +45,16 @@ public class PushPull
         _jointObjectInstance = Object.Instantiate(JointObjectPrefab, Hands);
         DistanceJoint2D jointInstance = _jointObjectInstance.GetComponent<DistanceJoint2D>();
         jointInstance.connectedBody = rbToConnect;
+        _pushingPullingObject = rbToConnect.gameObject;
+
+        Physics2D.IgnoreCollision(playerCollider, _pushingPullingObject.GetComponent<Collider2D>());
 
         return;
     }
 
     public void Release()
     {
+        Physics2D.IgnoreCollision(playerCollider, _pushingPullingObject.GetComponent<Collider2D>(), false);
         Object.Destroy(_jointObjectInstance);
     }
 }

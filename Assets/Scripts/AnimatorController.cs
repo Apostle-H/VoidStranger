@@ -10,6 +10,7 @@ public class AnimatorController : MonoBehaviour
     [HideInInspector] public bool grounded;
     [HideInInspector] public bool climb;
     [HideInInspector] public bool pushPull;
+    [HideInInspector] public float pushPullDirection;
 
     private void Update()
     {
@@ -19,10 +20,18 @@ public class AnimatorController : MonoBehaviour
         animator.SetBool("Grounded", grounded);
         animator.SetBool("Climb", climb);
         animator.SetBool("PushPull", pushPull);
+        animator.SetFloat("PushPullDirection", pushPullDirection);
     }
 
     public void SetThrowObjectTrigger()
     {
         animator.SetTrigger("Throw");
     }
+
+    public void Die()
+    {
+        animator.SetTrigger("Die");
+    }
+
+
 }

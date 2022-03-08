@@ -220,7 +220,7 @@ MonoBehaviour:
   hasBox: {fileID: 0}
   MoveSpeed: 5
   MoveSmoothTime: 0.2
-  JumpForce: 7
+  JumpForce: 8
   GroundCheckRadius: 0.2
   GroundLayer:
     serializedVersion: 2
@@ -246,7 +246,7 @@ MonoBehaviour:
   respawTag: Respawn
   deathTag: Death
   portalTag: Portal
-  portalCheckRadius: 0
+  portalCheckRadius: 0.2
 --- !u!70 &7434259040153320854
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

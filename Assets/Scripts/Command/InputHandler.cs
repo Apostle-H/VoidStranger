@@ -44,7 +44,12 @@ public class InputHandler : MonoBehaviour
     [SerializeField] Vector2 ThrowForce;
 
     [Header("Death")]
+    [SerializeField] private string respawTag;
     [SerializeField] private string deathTag;
+
+    [Header("Portal")]
+    [SerializeField] private string portalTag;
+    [SerializeField] private float portalCheckRadius;
 
     private Movement movement;
     private PushPull pushPull;
@@ -54,6 +59,7 @@ public class InputHandler : MonoBehaviour
     private bool _carringObject;
     private bool _climbing;
     private bool _throwBlock;
+    private bool _tep;
 
     private void Awake()
     {
@@ -76,6 +82,7 @@ public class InputHandler : MonoBehaviour
             if (pushPull.pushpull)
                 animatorController.pushPullDirection = movement.facingRight ? (movement.inputX > 0 ? 1 : -1) : (movement.inputX < 0 ? 1 : -1);
             movement.startClimbing = (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.W)) ? true : movement.startClimbing;
+            _tep = Input.GetKeyDown(KeyCode.W) ? true : _tep;
         }
 
         if (Mathf.Abs(rb.velocity.y) < .005f)
@@ -103,6 +110,19 @@ public class InputHandler : MonoBehaviour
             _carringObject = carryThrow.PickUp();
         }
 
+        if (_tep)
+        {
+            Portal portal;
+            Collider2D[] PortalOrNotColliders = Physics2D.OverlapCircleAll(transform.position, portalCheckRadius);
+            foreach (var collider in PortalOrNotColliders)
+            {
+                if (collider.CompareTag(portalTag) && collider.TryGetComponent(out portal))
+                {
+                    transform.position = portal.otherPortal.position;
+                }
+            }
+        }
+
         pushPull.Grab();
         
         if (_carringObject && carryThrow.throwCarried)
@@ -111,6 +131,7 @@ public class InputHandler : MonoBehaviour
         movement.jump = false;
         carryThrow.carry = false;
         carryThrow.throwCarried = false;
+        _tep = false;
 
         animatorController.pushPull = pushPull.pushpull;
     }
@@ -125,7 +146,7 @@ public class InputHandler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Respawn"))
+        if (collision.CompareTag(respawTag))
         {
             death.NewCheckPoint(collision.transform.position);
         }

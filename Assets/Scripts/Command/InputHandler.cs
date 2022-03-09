@@ -57,7 +57,7 @@ public class InputHandler : MonoBehaviour
 
     private bool _carringObject;
     private bool _climbing;
-    private bool _throwBlock;
+    private bool _inputBlock;
     private bool _tep;
 
     private void Awake()
@@ -70,12 +70,12 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        movement.inputX = !_throwBlock ? Input.GetAxis("Horizontal") : 0;
+        movement.inputX = !_inputBlock ? Input.GetAxis("Horizontal") : 0;
         animatorController.hasInputX = (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D));
         animatorController.inputX = Input.GetAxis("Horizontal");
-        movement.inputY = !_throwBlock ? Input.GetAxis("Vertical") : 0;
+        movement.inputY = !_inputBlock ? Input.GetAxis("Vertical") : 0;
 
-        if (!_throwBlock)
+        if (!_inputBlock)
         {
             movement.jump = Input.GetButtonDown("Jump") ? true : movement.jump;
             carryThrow.carry = Input.GetButtonDown("PickUp") ? true : carryThrow.carry;
@@ -86,7 +86,7 @@ public class InputHandler : MonoBehaviour
             _tep = Input.GetKeyDown(KeyCode.W) ? true : _tep;
         }
 
-        if (Mathf.Abs(rb.velocity.y) < .005f)
+        if (Physics2D.OverlapCircle(Feet.position, GroundCheckRadius, GroundLayer))
         {
             carryThrow.throwCarried = Input.GetButtonDown("Throw") ? true : carryThrow.throwCarried;
         }
@@ -170,9 +170,9 @@ public class InputHandler : MonoBehaviour
         Gizmos.DrawWireSphere(CarryThrowHands.position, CarryCheckRadius);
     }
 
-    private void ThrowBlock(int block)
+    private void Block(int block)
     {
-        _throwBlock = block == 1;
+        _inputBlock = block == 1;
     }
 
     private void ThrowObject()

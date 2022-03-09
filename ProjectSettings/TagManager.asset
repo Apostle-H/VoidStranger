@@ -10,6 +10,7 @@ TagManager:
   - OpenGate2
   - OpenGate3
   - OpenGate4
+  - OpenGate5
   layers:
   - Default
   - TransparentFX

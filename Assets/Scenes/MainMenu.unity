@@ -831,7 +831,7 @@ GameObject:
   - component: {fileID: 1764530528}
   - component: {fileID: 1764530527}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Tittle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -885,8 +885,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4286785436
-  m_fontColor: {r: 0.6132076, g: 0.1533019, b: 0.51497537, a: 1}
+    rgba: 4284288115
+  m_fontColor: {r: 0.45098042, g: 0.04705883, b: 0.3647059, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

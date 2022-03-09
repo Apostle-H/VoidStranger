@@ -13,13 +13,14 @@ public class PushPull
     private LayerMask CheckLayer;
     private Transform Hands;
     private GameObject JointObjectPrefab;
+    private PhysicsMaterial2D NonFrictionMaterial;
 
     public bool pushpull;
 
     private GameObject _jointObjectInstance;
     private GameObject _pushingPullingObject;
 
-    public PushPull(Rigidbody2D _rb, Collider2D _pc, float _cr, LayerMask _cl, Transform _h, GameObject _jop)
+    public PushPull(Rigidbody2D _rb, Collider2D _pc, float _cr, LayerMask _cl, Transform _h, GameObject _jop, PhysicsMaterial2D _nfm)
     {
         rb = _rb;
         playerCollider = _pc;
@@ -27,6 +28,7 @@ public class PushPull
         CheckLayer = _cl;
         Hands = _h;
         JointObjectPrefab = _jop;
+        NonFrictionMaterial = _nfm;
     }
 
     public void Grab()
@@ -47,6 +49,7 @@ public class PushPull
         jointInstance.connectedBody = rbToConnect;
         _pushingPullingObject = rbToConnect.gameObject;
 
+        rbToConnect.sharedMaterial = NonFrictionMaterial;
         Physics2D.IgnoreCollision(playerCollider, _pushingPullingObject.GetComponent<Collider2D>());
 
         return;
@@ -54,6 +57,7 @@ public class PushPull
 
     public void Release()
     {
+        _pushingPullingObject.GetComponent<Rigidbody2D>().sharedMaterial = null;
         Physics2D.IgnoreCollision(playerCollider, _pushingPullingObject.GetComponent<Collider2D>(), false);
         Object.Destroy(_jointObjectInstance);
     }

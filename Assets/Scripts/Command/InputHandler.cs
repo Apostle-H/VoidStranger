@@ -33,6 +33,7 @@ public class InputHandler : MonoBehaviour
     [SerializeField] private Transform PushPullHands;
 
     [SerializeField] private GameObject PushPullJointPrefab;
+    [SerializeField] private PhysicsMaterial2D NonFrictionMaterail;
 
     [Header("CarryThrow")]
     [SerializeField] private float CarryCheckRadius;
@@ -62,7 +63,7 @@ public class InputHandler : MonoBehaviour
     private void Awake()
     {
         movement = new Movement(rb, MoveSpeed, MoveSmoothTime, JumpForce, GroundCheckRadius, GroundLayer, Feet, ClimbMoveSpeed);
-        pushPull = new PushPull(rb, playerCollider, PushPullCheckRadius, PushPullLayer, PushPullHands, PushPullJointPrefab);
+        pushPull = new PushPull(rb, playerCollider, PushPullCheckRadius, PushPullLayer, PushPullHands, PushPullJointPrefab, NonFrictionMaterail);
         carryThrow = new CarryThrow(CarryCheckRadius, CarryLayer, CarryThrowHands, ThrowForce);
         death = new Death(gameObject);
     }
@@ -136,16 +137,13 @@ public class InputHandler : MonoBehaviour
         animatorController.pushPull = pushPull.pushpull;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag(deathTag))
         {
             animatorController.Die();
         }
-    }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
         if (collision.CompareTag(respawTag))
         {
             death.NewCheckPoint(collision.transform.position);

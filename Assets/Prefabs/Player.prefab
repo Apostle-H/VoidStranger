@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7434259039112744798}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.282, y: 0, z: 0}
+  m_LocalPosition: {x: 0.388, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7434259040153320851}
@@ -54,7 +54,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7434259040016253718}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.59, y: -0.046, z: 0}
+  m_LocalPosition: {x: 0.388, y: -0.267, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7434259040153320851}
@@ -237,6 +237,7 @@ MonoBehaviour:
     m_Bits: 128
   PushPullHands: {fileID: 7434259039112744797}
   PushPullJointPrefab: {fileID: 5034915742802368703, guid: 177068647f501b643a212ba5246e9e7b, type: 3}
+  NonFrictionMaterail: {fileID: 6200000, guid: 6aa8adae9cce6bd4e94b807159e2a923, type: 2}
   CarryCheckRadius: 0.7
   CarryLayer:
     serializedVersion: 2

@@ -6,7 +6,8 @@ public class CarryThrow
 {
     private float CheckRadius;
     private LayerMask CheckLayer;
-    private Transform Hands;
+    private Transform PickUpHands;
+    private Transform ThrowHands;
 
     private Vector2 ThrowForce;
 
@@ -15,11 +16,12 @@ public class CarryThrow
 
     private Rigidbody2D _carriedRb;
 
-    public CarryThrow(float _cr, LayerMask _cl, Transform _h, Vector2 _tf)
+    public CarryThrow(float _cr, LayerMask _cl, Transform _pih, Transform _th, Vector2 _tf)
     {
         CheckRadius = _cr;
         CheckLayer = _cl;
-        Hands = _h;
+        PickUpHands = _pih;
+        ThrowHands = _th;
         ThrowForce = _tf;
     }
 
@@ -30,7 +32,7 @@ public class CarryThrow
 
         if (_carriedRb) { Drop(); return false; }
 
-        _carriedRb = Physics2D.OverlapCircle(Hands.position, CheckRadius, CheckLayer)?.attachedRigidbody;
+        _carriedRb = Physics2D.OverlapCircle(PickUpHands.position, CheckRadius, CheckLayer)?.attachedRigidbody;
         if (!_carriedRb) return false;
 
         _carriedRb.gameObject.SetActive(false);
@@ -40,7 +42,7 @@ public class CarryThrow
 
     private void Drop()
     {
-        _carriedRb.transform.position = Hands.position;
+        _carriedRb.transform.position = PickUpHands.position;
         _carriedRb.gameObject.SetActive(true);
 
         _carriedRb = null;
@@ -50,7 +52,7 @@ public class CarryThrow
     {
         if (!_carriedRb) return false;
 
-        _carriedRb.transform.position = Hands.position;
+        _carriedRb.transform.position = ThrowHands.position;
         _carriedRb.gameObject.SetActive(true);
         _carriedRb.AddForce(new Vector2(ThrowForce.x * forward.x, ThrowForce.y), ForceMode2D.Impulse);
 

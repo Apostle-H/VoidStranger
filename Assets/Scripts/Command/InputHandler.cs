@@ -38,7 +38,8 @@ public class InputHandler : MonoBehaviour
     [Header("CarryThrow")]
     [SerializeField] private float CarryCheckRadius;
     [SerializeField] private LayerMask CarryLayer;
-    [SerializeField] private Transform CarryThrowHands;
+    [SerializeField] private Transform PickUpHands;
+    [SerializeField] private Transform ThrowHands;
 
     [SerializeField] Vector2 ThrowForce;
 
@@ -64,7 +65,7 @@ public class InputHandler : MonoBehaviour
     {
         movement = new Movement(rb, MoveSpeed, MoveSmoothTime, JumpForce, GroundCheckRadius, GroundLayer, Feet, ClimbMoveSpeed);
         pushPull = new PushPull(rb, playerCollider, PushPullCheckRadius, PushPullLayer, PushPullHands, PushPullJointPrefab, NonFrictionMaterail);
-        carryThrow = new CarryThrow(CarryCheckRadius, CarryLayer, CarryThrowHands, ThrowForce);
+        carryThrow = new CarryThrow(CarryCheckRadius, CarryLayer, PickUpHands, ThrowHands, ThrowForce);
         death = new Death(gameObject);
     }
 
@@ -167,7 +168,7 @@ public class InputHandler : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(PushPullHands.position, PushPullCheckRadius);
-        Gizmos.DrawWireSphere(CarryThrowHands.position, CarryCheckRadius);
+        Gizmos.DrawWireSphere(PickUpHands.position, CarryCheckRadius);
     }
 
     private void Block(int block)

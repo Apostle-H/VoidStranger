@@ -18,12 +18,4 @@ public class Hints : MonoBehaviour
             hint.SetActive(true);
         }
     }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            hint.SetActive(false);
-        }
-    }
 }

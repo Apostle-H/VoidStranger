@@ -7,17 +7,17 @@ public class Button : MonoBehaviour
     [SerializeField] private Animator target;
     [SerializeField] private string enableBoxTag;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag(enableBoxTag))
+        if (collision.CompareTag(enableBoxTag))
         {
             target.SetTrigger("Activate");
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag(enableBoxTag))
+        if (collision.CompareTag(enableBoxTag))
         {
             target.SetTrigger("Activate");
         }
